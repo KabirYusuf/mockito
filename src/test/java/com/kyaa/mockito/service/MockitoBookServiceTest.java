@@ -67,7 +67,9 @@ class MockitoBookServiceTest {
 
         mockitoBookService.addBook(addBookRequest);
 
-        verify(bookRepository, times(1)).findBooksByName("Mockito");
+
+        verify(bookRepository).findBooksByName("Mockito");
+        verifyNoMoreInteractions(bookRepository);
         verify(bookRepository, never()).save(book);
     }
 
