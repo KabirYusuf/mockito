@@ -126,5 +126,6 @@ class MockitoBookServiceTest {
         verify(bookRepository).findById(3L);
 
         assertEquals(3, books.size());
+        
     }
 }
