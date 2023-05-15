@@ -1,6 +1,6 @@
 package com.kyaa.mockito.service;
 
-import com.kyaa.mockito.data.dto.AddBookRequest;
+import com.kyaa.mockito.data.dto.request.AddBookRequest;
 import com.kyaa.mockito.data.model.Book;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.kyaa.mockito.service;
 
-import com.kyaa.mockito.data.dto.AddBookRequest;
+import com.kyaa.mockito.data.dto.request.AddBookRequest;
 import com.kyaa.mockito.data.model.Book;
 import com.kyaa.mockito.data.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -126,6 +126,6 @@ class MockitoBookServiceTest {
         verify(bookRepository).findById(3L);
 
         assertEquals(3, books.size());
-        
+
     }
 }

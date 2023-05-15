@@ -1,4 +1,4 @@
-package com.kyaa.mockito.data.dto;
+package com.kyaa.mockito.data.dto.request;
 
 import lombok.Data;
 
