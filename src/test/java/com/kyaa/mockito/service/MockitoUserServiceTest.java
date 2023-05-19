@@ -1,5 +1,6 @@
 package com.kyaa.mockito.service;
 
+import com.kyaa.mockito.Role;
 import com.kyaa.mockito.data.dto.request.RegisterUserRequest;
 import com.kyaa.mockito.data.model.User;
 import com.kyaa.mockito.data.repository.UserRepository;
@@ -8,15 +9,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import static com.kyaa.mockito.Role.ADMIN;
+import static com.kyaa.mockito.Role.USER;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -41,7 +43,7 @@ class MockitoUserServiceTest {
 
     @Test
     void saveUser() {
-        User savedUser = new User(1L,"kabir@gmail.com","1234");
+        User savedUser = new User(1L,"kabir@gmail.com","1234", Set.of(USER));
 //        when(userRepository.save(userArgumentCaptor.capture())).thenReturn(savedUser);
 //        mockitoUserService.saveUser(registerUserRequest);
 //        User user = userArgumentCaptor.getValue();
@@ -71,7 +73,7 @@ class MockitoUserServiceTest {
 
     @Test
     void findUserById() {
-        User user = new User(1L,"bcscnks@gmail.com","hrugn");
+        User user = new User(1L,"bcscnks@gmail.com","hrugn", Set.of(USER));
 
         given(userRepository.findById(any(Long.class))).willReturn(Optional.of(user));
 
@@ -85,8 +87,8 @@ class MockitoUserServiceTest {
     @Test
     void findAllUsers() {
         given(userRepository.findAll()).willReturn(List.of(
-                new User(1L, "ngsnvk","fnacnsl "),
-                new User(2L, "nwgbvdn", "huefvbcn")
+                new User(1L, "ngsnvk","fnacnsl ", Set.of(USER)),
+                new User(2L, "nwgbvdn", "huefvbcn", Set.of(USER))
         ));
 
         var foundUsers = mockitoUserService.findAllUsers();
@@ -97,4 +99,27 @@ class MockitoUserServiceTest {
 
         verifyNoMoreInteractions(userRepository);
     }
+    @Test
+    void testToAddRoleToUser(){
+        Set<Role> userRole = new HashSet<>();
+        userRole.add(USER);
+        User user = new User(1L,"bcscnks@gmail.com","hrugn", userRole);
+
+        user.getRoles().add(ADMIN);
+        User savedUser = new User(1L,"bcscnks@gmail.com","hrugn", userRole);
+        given(userRepository.findById(1L)).willReturn(Optional.of(user));
+        given(userRepository.save(user)).willReturn(savedUser);
+
+        String response = mockitoUserService.addRole(1L, "Admin");
+
+        BDDMockito.then(userRepository).should().findById(1L);
+        BDDMockito.then(userRepository).should().save(savedUser);
+
+        InOrder inOrder = Mockito.inOrder(userRepository);
+
+        BDDMockito.then(userRepository).should(inOrder).findById(1L);
+        BDDMockito.then(userRepository).should(inOrder).save(user);
+
+    }
+
 }

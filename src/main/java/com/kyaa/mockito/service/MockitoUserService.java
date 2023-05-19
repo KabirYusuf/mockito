@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -22,7 +23,9 @@ public class MockitoUserService implements UserService{
     @Override
     public String saveUser(RegisterUserRequest registerUserRequest) {
         if (userRepository.findUserByEmail(registerUserRequest.getEmail()).isPresent())throw  new UserException("Email exist");
-        User user = new User(null,registerUserRequest.getEmail(),registerUserRequest.getPassword(), Set.of(USER));
+        Set<Role> userRole = new HashSet<>();
+        userRole.add(USER);
+        User user = new User(null,registerUserRequest.getEmail(),registerUserRequest.getPassword(),userRole);
         userRepository.save(user);
         return "Success";
     }
