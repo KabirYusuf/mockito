@@ -1,12 +1,12 @@
 package com.kyaa.mockito.data.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.kyaa.mockito.Role;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Set;
 
 @Data
 @Entity
@@ -18,4 +18,7 @@ public class User {
     private Long id;
     private String email;
     private String password;
+    @Enumerated(EnumType.STRING)
+    @ElementCollection(targetClass = Role.class)
+    Set<Role> roles;
 }
